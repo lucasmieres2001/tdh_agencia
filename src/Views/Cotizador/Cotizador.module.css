@@ -1,0 +1,177 @@
+:root {
+  --primary: linear-gradient(135deg, #1E88E5, #42A5F5);
+  --primary-hover: linear-gradient(135deg, #1565C0, #1E88E5);
+  --success: #4CAF50;
+  --bg: rgba(255, 255, 255, 0.7);
+  --border: rgba(255, 255, 255, 0.2);
+  --text: #222;
+  --gray: #666;
+  --shadow: 0 8px 40px rgba(30, 136, 229, 0.2);
+  --radius: 20px;
+  --spacing: 2rem;
+  --backdrop: blur(10px);
+}
+
+body {
+  background: linear-gradient(135deg, #E3F2FD, #90CAF9);
+  min-height: 100vh;
+}
+
+.container {
+    
+  max-width: 1500px;
+  margin: 4rem auto;
+  background: var(--bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: var(--backdrop);
+  border: 1px solid var(--border);
+  padding: var(--spacing);
+  transition: all 0.4s ease;
+}
+
+.title {
+    user-select: none;
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+
+.proveedores {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.subTitle {
+  font-weight: 600;
+  color: var(--gray);
+  margin-bottom: 1rem;
+}
+
+.proveedoresList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.proveedor {
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 24px;
+  border-radius: 30px;
+  backdrop-filter: var(--backdrop);
+  color: var(--text);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.proveedor:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.active {
+  background: var(--success);
+  color: #fff;
+}
+
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.field input {
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  color: var(--text);
+  backdrop-filter: var(--backdrop);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.field input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+}
+
+
+.stepper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: var(--backdrop);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.stepper button {
+  flex: 0 0 45px;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.stepper button:hover {
+  background: rgba(30, 136, 229, 0.1);
+}
+
+
+.submit {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.2rem 2rem;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(30, 136, 229, 0.4);
+  transition: all 0.4s ease;
+}
+
+.submit:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 10px 28px rgba(21, 101, 192, 0.5);
+  transform: translateY(-2px);
+}
+
+.submit:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(21, 101, 192, 0.4);
+}
+
+.submit svg {
+  font-size: 1.25rem;
+}

@@ -1,0 +1,175 @@
+:root {
+  --color-fondo: #f4f7f9;
+  --color-tarjeta: #ffffff;
+  --color-texto-principal: #2c3e50;
+  --color-texto-secundario: #7f8c8d;
+  --color-borde: #e4e7ea;
+  --color-sombra: rgba(44, 62, 80, 0.08);
+  --color-primario: #3498db;
+  --color-seleccion: #2980b9;
+  --color-verde-directo: #2ecc71;
+  --color-naranja-escala: #f39c12;
+  --radio-borde: 12px;
+}
+
+.mainContainer {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto-principal);
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.resultsGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.flightsColumn, .hotelsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.columnTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-borde);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card {
+  background: var(--color-tarjeta);
+  border-radius: var(--radio-borde);
+  border: 2px solid var(--color-borde);
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px var(--color-sombra);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(44, 62, 80, 0.12);
+}
+
+.selected {
+  border-color: var(--color-seleccion);
+  box-shadow: 0 0 0 3px var(--color-seleccion);
+  transform: translateY(-2px) scale(1.01);
+}
+
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+}
+
+.directo {
+  background: var(--color-verde-directo);
+}
+
+.escala {
+  background: var(--color-naranja-escala);
+}
+
+.cardBody {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoLabel {
+  color: var(--color-texto-secundario);
+}
+
+.infoValue {
+  font-weight: 500;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.summaryCard {
+  background: var(--color-tarjeta);
+  border-radius: var(--radio-borde);
+  border: 2px solid var(--color-primario);
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px var(--color-sombra);
+  margin-top: 2rem;
+}
+
+.summaryTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.summaryTotal {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  margin: 1rem 0;
+}
+
+.copyBtn {
+  display: block;
+  width: 100%;
+  background: var(--color-primario);
+  color: white;
+  border: none;
+  border-radius: var(--radio-borde);
+  padding: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.copyBtn:hover {
+  background: var(--color-seleccion);
+}
+
+@media (max-width: 1024px) {
+  .resultsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .mainContainer {
+    padding: 1rem;
+  }
+  .card {
+    padding: 1rem;
+  }
+}
