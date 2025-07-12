@@ -10,21 +10,24 @@ import ResultadoDeBusqueda from '../ResultadoDeBusqueda/ResultadoDeBusqueda';
 
 
 export default function Cotizador() {
+  /*
   const [proveedores, setProveedores] = useState([
     { nombre: 'GitCordoba', activo: true },
     { nombre: 'FreeWay', activo: true },
     { nombre: 'Ola', activo: false },
   ]);
-
+*/
   const [formData, setFormData] = useState({
-    origen: '',
-    destino: '',
-    fechaIda: '',
-    noches: '',
-    pasajeros: 2,
-    menores: 0,
-    proveedores: [],
-  });
+  origen: '',
+  destino: '',
+  fechaIda: '',
+  fechaVuelta: '',
+  pasajeros: 2,
+  menores2: 0,   // ✅ NUEVO: menores de 2 años
+  menores18: 0,  // ✅ NUEVO: mayores de 2 y menores de 18 años
+  //proveedores: [],
+});
+
   const [loading, setLoading] = useState(false);
   const [resultadosBusqueda, setResultadosBusqueda] = useState(false);
   const [data, setData] = useState([]);
@@ -33,12 +36,13 @@ export default function Cotizador() {
     AOS.init({ duration: 800, once: true });
   }, []);
 
+  /*
   const toggleProveedor = (index) => {
     setProveedores(prev =>
       prev.map((p, i) => i === index ? { ...p, activo: !p.activo } : p)
     );
   };
-
+*/
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id]: value }));
@@ -53,37 +57,85 @@ export default function Cotizador() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const selectedProveedores = proveedores.filter(p => p.activo).map(p => p.nombre);
-    formData.proveedores = selectedProveedores;
-    console.log(formData);
-    setLoading(true);
-    try {
-      const query = await fetch('https://rutaDeLaAPI/cotizar', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Acá va el token de autenticación',
-      },   
-      body: JSON.stringify(formData ),
-    });
-    if (query.ok) {
-      setLoading(false);
-      const datas = await query.json();
-      console.log(datas);
-      setData(datas);
-      setResultadosBusqueda(true);
-      return;
+  e.preventDefault();
+  console.log(formData);
+  setLoading(true);
+
+  try {
+    const endpoints = [
+      { name: 'Proveedor 1', url: 'https://rutaDeLaAPI/proveedor1/cotizar' },
+      { name: 'Proveedor 2', url: 'https://rutaDeLaAPI/proveedor2/cotizar' },
+      { name: 'Proveedor 3', url: 'https://rutaDeLaAPI/proveedor3/cotizar' },
+      { name: 'Proveedor 4', url: 'https://rutaDeLaAPI/proveedor4/cotizar' }
+    ];
+
+    // Adjunta nombre a cada promesa
+    const promises = endpoints.map((ep) =>
+      fetch(ep.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Acá va el token de autenticación',
+        },
+        body: JSON.stringify(formData),
+      }).then(
+        (res) => ({ name: ep.name, response: res }),
+        (err) => Promise.reject({ name: ep.name, reason: err })
+      )
+    );
+
+    const results = await Promise.allSettled(promises);
+
+    console.log('Resultados de las promesas:', results);
+    const datos = [];
+    const errores = [];
+
+    for (const result of results) {
+      if (result.status === 'fulfilled') {
+        const { name, response } = result.value;
+        if (response.ok) {
+          const data = await response.json();
+          datos.push(data);
+        } else {
+          console.warn(`API ${name} devolvió error:`, response.status);
+          errores.push(`No se pudo obtener datos de ${name}: ${response.statusText}`);
+        }
+      } else {
+        const { name, reason } = result.reason;
+        console.error(`Fetch ${name} falló:`, reason);
+        errores.push(`No se pudo obtener datos de ${name}: ${reason.message || reason}`);
+      }
     }
-    } catch (error) {
+
+    // Si hubo errores, mostrar alerta y detener
+    if (errores.length > 0) {
       Swal.fire({
         icon: 'error',
         title: 'Error al cotizar',
-        text: 'Hubo un error al intentar cotizar el vuelo.',
+        html: errores.join('<br>'),
       });
       setLoading(false);
+      return;
     }
-  };
+
+    console.log('Todos los resultados:', datos);
+
+    setData(datos); // Guarda datos válidos
+    setResultadosBusqueda(true); // Muestra resultados
+    setLoading(false);
+
+  } catch (error) {
+    console.error('Error general:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error al cotizar',
+      text: 'Hubo un error al intentar cotizar el vuelo.',
+    });
+    setLoading(false);
+  }
+};
+
+
 
 
 
@@ -98,7 +150,7 @@ export default function Cotizador() {
       <form onSubmit={handleSubmit}>
         <h1 className={styles.title} data-aos="fade-down">✈️Cotizador de vuelo✈️</h1>
 
-        <section className={styles.proveedores} data-aos="fade-up">
+       {/* <section className={styles.proveedores} data-aos="fade-up"> 
           <p className={styles.subTitle}>Selecciona los proveedores</p>
           <div className={styles.proveedoresList}>
             {proveedores.map((p, i) => (
@@ -113,7 +165,7 @@ export default function Cotizador() {
               </button>
             ))}
           </div>
-        </section>
+        </section>*/}
 
         <div className={styles.grid} data-aos="fade-up">
           <div className={styles.field}>
@@ -129,8 +181,8 @@ export default function Cotizador() {
             <input id="fechaIda" type="date" value={formData.fechaIda} onChange={handleInputChange} required />
           </div>
           <div className={styles.field}>
-            <label htmlFor="noches">Noches</label>
-            <input id="noches" type="number" min="1" value={formData.noches} onChange={handleInputChange} required />
+            <label htmlFor="fechaVuelta">Fecha de vuelta</label>
+            <input id="fechaVuelta" type="date" value={formData.fechaVuelta} onChange={handleInputChange} required />
           </div>
           <div className={styles.field}>
             <label>Adultos</label>
@@ -140,14 +192,23 @@ export default function Cotizador() {
               <button type="button" onClick={() => handleStepper('pasajeros', 'inc')}>+</button>
             </div>
           </div>
-          <div className={styles.field}>
-            <label>Menores (2-11)</label>
+            <div className={styles.field}>
+            <label>Menores de 2 años</label>
             <div className={styles.stepper}>
-              <button type="button" onClick={() => handleStepper('menores', 'dec')}>-</button>
-              <span>{formData.menores}</span>
-              <button type="button" onClick={() => handleStepper('menores', 'inc')}>+</button>
+              <button type="button" onClick={() => handleStepper('menores2', 'dec')}>-</button>
+              <span>{formData.menores2}</span>
+              <button type="button" onClick={() => handleStepper('menores2', 'inc')}>+</button>
             </div>
           </div>
+          <div className={styles.field}>
+            <label>Menores entre 2 y 18 años</label>
+            <div className={styles.stepper}>
+              <button type="button" onClick={() => handleStepper('menores18', 'dec')}>-</button>
+              <span>{formData.menores18}</span>
+              <button type="button" onClick={() => handleStepper('menores18', 'inc')}>+</button>
+            </div>
+          </div>
+
         </div>
 
         <button type="submit" className={styles.submit} data-aos="fade-up">

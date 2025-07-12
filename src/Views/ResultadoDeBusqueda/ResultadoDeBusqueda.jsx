@@ -42,7 +42,7 @@ export default function ResultadoDeBusqueda(datosCotizacion) {
   return (
     <main className={styles.mainContainer}>
 
-        {selectedHotel && (
+        {/*selectedHotel && (
         <div className={styles.mapWrapper} data-aos="fade-up">
             <h3 className={styles.mapTitle}>Ubicación del hotel seleccionado</h3>
             <MapContainer 
@@ -50,8 +50,8 @@ export default function ResultadoDeBusqueda(datosCotizacion) {
             location={selectedHotel.location} 
             />
         </div>
-        )}
-        {!selectedHotel && (<h1 data-aos="fade-down">Seleccione una combinación de Vuelo y Hotel</h1>)}
+        )*/}
+        <h1 data-aos="fade-down">Seleccione una combinación de Vuelo y Hotel</h1>
       
       <div className={styles.resultsGrid}>
 
