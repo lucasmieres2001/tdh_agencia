@@ -102,8 +102,38 @@ body {
 }
 
 .field {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+}
+
+.field select {
+  padding-right: 2.5rem;
+  width: 100%;              /* ocupa todo el ancho del campo */
+  box-sizing: border-box;   /* incluye padding y borde en el width */
+  border: none;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  font-size: 1rem;
+  color: var(--text);
+  backdrop-filter: var(--backdrop);
+  transition: all 0.3s ease;
+  appearance: none;         /* quita flecha nativa en algunos navegadores */
+}
+
+.field select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.field::after {           
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 0.8rem;
+  color: var(--gray);
 }
 
 .field label {
@@ -121,12 +151,6 @@ body {
   color: var(--text);
   backdrop-filter: var(--backdrop);
   transition: all 0.3s ease;
-}
-
-.field input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
-  background: rgba(255, 255, 255, 0.85);
 }
 
 .stepper {
@@ -192,4 +216,19 @@ body {
 
 .submit svg {
   font-size: 1.2rem;
+}
+
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr !important; /* fuerza una columna */
+  }
+  .field {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Evita overflow inesperado */
+.container {
+  overflow: hidden;
 }
