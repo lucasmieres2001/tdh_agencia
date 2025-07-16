@@ -1,0 +1,111 @@
+{
+    "parametros_busqueda": {
+        "adultos": 1,
+        "destino": "GIG",
+        "fecha_ida": "2025-08-01",
+        "fecha_vuelta": "2025-08-08",
+        "infantes": 0,
+        "ninos": 1,
+        "origen": "COR"
+    },
+    "proveedor": "Glas Travel",
+    "resultados": [
+        {
+            "aerolinea": "Aerolineas Argentinas",
+            "codigo_aerolinea": "AR",
+            "cotizacion_id": "516",
+            "duracion_total": 1190,
+            "ida": {
+                "destino": "GIG",
+                "destino_nombre": "RIO DE JANEIRO",
+                "duracion_min": 180,
+                "escalas": 0,
+                "llegada": "2025-08-01T17:25:00",
+                "origen": "COR",
+                "origen_nombre": "CORDOBA",
+                "salida": "2025-08-01T14:25:00"
+            },
+            "legs_count": 2,
+            "moneda": "USD",
+            "precio_total": 755.52,
+            "proveedor": "Glas Travel",
+            "source": "Amadeus",
+            "tipo_recomendacion": "MÁS ECONÓMICO",
+            "vuelta": {
+                "destino": "COR",
+                "destino_nombre": "CORDOBA",
+                "duracion_min": 1010,
+                "escalas": 0,
+                "llegada": "2025-08-09T08:45:00",
+                "origen": "GIG",
+                "origen_nombre": "RIO DE JANEIRO",
+                "salida": "2025-08-08T15:55:00"
+            }
+        },
+        {
+            "aerolinea": "Gol Transportes Aereos",
+            "codigo_aerolinea": "G3",
+            "convenience_score": 0.031189517465737934,
+            "cotizacion_id": "95",
+            "duracion_total": 415,
+            "ida": {
+                "destino": "GIG",
+                "destino_nombre": "RIO DE JANEIRO",
+                "duracion_min": 185,
+                "escalas": 0,
+                "llegada": "2025-08-01T05:15:00",
+                "origen": "COR",
+                "origen_nombre": "CORDOBA",
+                "salida": "2025-08-01T02:10:00"
+            },
+            "legs_count": 2,
+            "moneda": "USD",
+            "precio_total": 850.0,
+            "proveedor": "Glas Travel",
+            "source": "Amadeus",
+            "tipo_recomendacion": "MÁS CONVENIENTE",
+            "vuelta": {
+                "destino": "COR",
+                "destino_nombre": "CORDOBA",
+                "duracion_min": 230,
+                "escalas": 0,
+                "llegada": "2025-08-09T01:20:00",
+                "origen": "GIG",
+                "origen_nombre": "RIO DE JANEIRO",
+                "salida": "2025-08-08T21:30:00"
+            }
+        },
+        {
+            "aerolinea": "Gol Transportes Aereos",
+            "codigo_aerolinea": "G3",
+            "cotizacion_id": "145",
+            "duracion_total": 410,
+            "ida": {
+                "destino": "GIG",
+                "destino_nombre": "RIO DE JANEIRO",
+                "duracion_min": 180,
+                "escalas": 0,
+                "llegada": "2025-08-01T17:25:00",
+                "origen": "COR",
+                "origen_nombre": "CORDOBA",
+                "salida": "2025-08-01T14:25:00"
+            },
+            "legs_count": 2,
+            "moneda": "USD",
+            "precio_total": 1016.9,
+            "proveedor": "Glas Travel",
+            "source": "Amadeus",
+            "tipo_recomendacion": "MÁS RÁPIDO",
+            "vuelta": {
+                "destino": "COR",
+                "destino_nombre": "CORDOBA",
+                "duracion_min": 230,
+                "escalas": 0,
+                "llegada": "2025-08-09T01:20:00",
+                "origen": "GIG",
+                "origen_nombre": "RIO DE JANEIRO",
+                "salida": "2025-08-08T21:30:00"
+            }
+        }
+    ]
+}
