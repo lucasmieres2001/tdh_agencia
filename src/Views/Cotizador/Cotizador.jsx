@@ -9,6 +9,7 @@ import PantallaDeCarga from '../PantallaDeCarga/PantallaDeCarga';
 import Swal from 'sweetalert2';
 import ResultadoDeBusqueda from '../ResultadoDeBusqueda/ResultadoDeBusqueda';
 import dataBase from './AllAirPortsGitCor.json';
+import dataBaseResult from '../ResultadoDeBusqueda/probarRespuesta.json';
 
 // Prepara las opciones para react-select
 export const airportOptions = dataBase.map(a => ({
@@ -58,39 +59,39 @@ export default function Cotizador() {
     e.preventDefault();
     console.log(formData);
     setLoading(true);
-
+  
     try {
       const { origen, destino, fechaIda, fechaVuelta, pasajeros } = formData;
-      const baseUrl = new URL('http://127.0.0.1:5001/api/v1/gitcordoba/flights');
-      baseUrl.searchParams.set('origen', origen);
-      baseUrl.searchParams.set('destino', destino);
-      baseUrl.searchParams.set('fecha_ida', fechaIda);
-      baseUrl.searchParams.set('fecha_vuelta', fechaVuelta);
-      baseUrl.searchParams.set('adultos', pasajeros);
-      baseUrl.searchParams.set('is_in_usd', 'false');
-      const urlString = baseUrl.toString();
-
+  
+      // Simulación de múltiples "endpoints" con el mismo JSON de prueba
+      const simulateFakeAPICall = (name) =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ name, response: { ok: true, json: () => Promise.resolve(dataBaseResult) } });
+          }, 300); // Simula latencia
+        });
+  
       const endpoints = [
-        { name: 'Proveedor 1', url: urlString },
-        { name: 'Proveedor 2', url: urlString },
-        { name: 'Proveedor 3', url: urlString },
-        { name: 'Proveedor 4', url: urlString },
+        { name: 'Proveedor 1' },
+        { name: 'Proveedor 2' },
+        { name: 'Proveedor 3' },
+        { name: 'Proveedor 4' },
       ];
-
+  
       const promises = endpoints.map((ep) =>
-        fetch(ep.url, { method: 'GET' })
+        simulateFakeAPICall(ep.name)
           .then(
-            (res) => ({ name: ep.name, response: res }),
+            (res) => ({ name: ep.name, response: res.response }),
             (err) => Promise.reject({ name: ep.name, reason: err })
           )
       );
-
+  
       const results = await Promise.allSettled(promises);
-
+  
       console.log('Resultados de las promesas:', results);
       const datos = [];
       const errores = [];
-
+  
       for (const result of results) {
         if (result.status === 'fulfilled') {
           const { name, response } = result.value;
@@ -107,7 +108,7 @@ export default function Cotizador() {
           errores.push(`No se pudo obtener datos de ${name}: ${reason.message || reason}`);
         }
       }
-
+  
       if (errores.length > 0) {
         Swal.fire({
           icon: 'error',
@@ -117,12 +118,33 @@ export default function Cotizador() {
         setLoading(false);
         return;
       }
+  
+      // 🔍 Filtrar los vuelos que coincidan con los datos del formulario
+      const allFlights = datos.flatMap(d => d.resultados);
+      const vuelosFiltrados = allFlights.filter(f =>
+        f.ida.origen === origen &&
+        f.ida.destino === destino &&
+        f.ida.salida.startsWith(fechaIda) &&
+        f.vuelta.salida.startsWith(fechaVuelta)
+      );
+      
 
-      console.log('Todos los resultados:', datos);
-      setData(datos);
+  
+      if (vuelosFiltrados.length === 0) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Sin resultados',
+          text: 'No se encontraron vuelos con los datos ingresados. Intenta con otras fechas o aeropuertos.',
+        });
+        setLoading(false);
+        return;
+      }
+  
+      console.log('Resultados filtrados:', vuelosFiltrados);
+      setData(vuelosFiltrados);
       setResultadosBusqueda(true);
       setLoading(false);
-
+  
     } catch (error) {
       console.error('Error general:', error);
       Swal.fire({
@@ -133,6 +155,7 @@ export default function Cotizador() {
       setLoading(false);
     }
   };
+  
 
   return (
     <>

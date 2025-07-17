@@ -2,33 +2,61 @@ import React, { useState, useEffect } from 'react';
 import styles from './ResultadoDeBusqueda.module.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import MapContainer from '../MapContainer/MapContainer'; // Asegúrate de que la ruta sea correcta
+import MapContainer from '../MapContainer/MapContainer';
 
-export default function ResultadoDeBusqueda(datosCotizacion) {
-    const [selectedFlightId, setSelectedFlightId] = useState(null);
-    const [selectedHotelId, setSelectedHotelId] = useState(null);
-    const [showMap, setShowMap] = useState(false);
+export default function ResultadoDeBusqueda({ datosCotizacion }) {
+  const [selectedFlightId, setSelectedFlightId] = useState(null);
+  const [selectedHotelId, setSelectedHotelId] = useState(null);
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
 
-  
+  if (!datosCotizacion || datosCotizacion.length === 0) {
+    return (
+      <main className={styles.mainContainer}>
+        <h2>No se encontraron resultados para los criterios seleccionados.</h2>
+      </main>
+    );
+  }
 
-
-  const flightOptions = [
-    { id: 'AR-08', airline: 'Aerolíneas Argentinas', type: 'Directo', salida: '08:00 AM', llegada: '10:00 AM', duracion: '2h 00m', price: 250000 },
-    { id: 'FLY-11', airline: 'Flybondi', type: 'Directo', salida: '11:30 AM', llegada: '13:30 PM', duracion: '2h 00m', price: 265000 },
-    { id: 'JS-14', airline: 'JetSmart', type: 'Directo', salida: '14:00 PM', llegada: '16:00 PM', duracion: '2h 00m', price: 270000 },
-    { id: 'LATAM-06', airline: 'LATAM Airlines', type: '1 Escala', salida: '06:00 AM', llegada: '11:30 AM', duracion: '5h 30m', price: 210000 },
-    { id: 'JS-09', airline: 'Jetsmart', type: '1 Escala', salida: '09:15 AM', llegada: '15:00 PM', duracion: '5h 45m', price: 225000 },
-    { id: 'SKY-13', airline: 'Sky Airlines', type: '1 Escala', salida: '13:30 PM', llegada: '19:00 PM', duracion: '5h 30m', price: 230000 },
-  ];
+  const flightOptions = datosCotizacion.map(f => ({
+    id: f.cotizacion_id,
+    airline: f.aerolinea,
+    type: f.legs_count > 2 || f.ida.escalas > 0 ? `${f.ida.escalas} Escala` : 'Directo',
+    salida: new Date(f.ida.salida).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    llegada: new Date(f.ida.llegada).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    duracion: `${Math.floor(f.ida.duracion_min / 60)}h ${f.ida.duracion_min % 60}m`,
+    price: f.precio_total,
+    moneda: f.moneda
+  }));
 
   const hotelOptions = [
-    { id: 'Panamericano', name: 'Hotel Panamericano', category: '⭐⭐⭐⭐⭐', regime: 'Desayuno Incluido', price: 550000, location: { lat: -34.6037, lng: -58.3816 } },
-    { id: 'Emperador', name: 'Hotel Emperador', category: '⭐⭐⭐⭐⭐', regime: 'Solo Alojamiento', price: 480000, location: { lat: -34.6090, lng: -58.3832 } },
-    { id: 'Alvear', name: 'Alvear Palace Hotel', category: '⭐⭐⭐⭐⭐', regime: 'All Inclusive', price: 620000,  location: { lat: -34.5875, lng: -58.3935 } },
+    {
+      id: 'Panamericano',
+      name: 'Hotel Panamericano',
+      category: '⭐⭐⭐⭐⭐',
+      regime: 'Desayuno Incluido',
+      price: 550000,
+      location: { lat: -34.6037, lng: -58.3816 }
+    },
+    {
+      id: 'Emperador',
+      name: 'Hotel Emperador',
+      category: '⭐⭐⭐⭐⭐',
+      regime: 'Solo Alojamiento',
+      price: 480000,
+      location: { lat: -34.6090, lng: -58.3832 }
+    },
+    {
+      id: 'Alvear',
+      name: 'Alvear Palace Hotel',
+      category: '⭐⭐⭐⭐⭐',
+      regime: 'All Inclusive',
+      price: 620000,
+      location: { lat: -34.5875, lng: -58.3935 }
+    }
   ];
 
   const directFlights = flightOptions.filter(f => f.type === 'Directo');
@@ -37,28 +65,20 @@ export default function ResultadoDeBusqueda(datosCotizacion) {
   const selectedFlight = flightOptions.find(f => f.id === selectedFlightId);
   const selectedHotel = hotelOptions.find(h => h.id === selectedHotelId);
 
-  const totalPrice = selectedFlight && selectedHotel ? selectedFlight.price + selectedHotel.price : null;
+  const totalPrice =
+    selectedFlight && selectedHotel
+      ? selectedFlight.price * 1000 + selectedHotel.price
+      : null;
 
   return (
     <main className={styles.mainContainer}>
+      <h1 data-aos="fade-down">Seleccione una combinación de Vuelo y Hotel</h1>
 
-        {/*selectedHotel && (
-        <div className={styles.mapWrapper} data-aos="fade-up">
-            <h3 className={styles.mapTitle}>Ubicación del hotel seleccionado</h3>
-            <MapContainer 
-            apiKey="AIzaSyBXKhiKbdgi1xaAQBnH8Tiw7Qv5LliO6kw"
-            location={selectedHotel.location} 
-            />
-        </div>
-        )*/}
-        <h1 data-aos="fade-down">Seleccione una combinación de Vuelo y Hotel</h1>
-      
       <div className={styles.resultsGrid}>
-
         {/* Vuelos Directos */}
         <div className={styles.flightsColumn}>
-          <h2 className={styles.columnTitle} data-aos="fade-up">✈️ Top 3 Vuelos Directos</h2>
-          {directFlights.map((flight) => (
+          <h2 className={styles.columnTitle} data-aos="fade-up">✈️ Vuelos Directos</h2>
+          {directFlights.map(flight => (
             <article
               key={flight.id}
               className={`${styles.card} ${selectedFlightId === flight.id ? styles.selected : ''}`}
@@ -83,13 +103,13 @@ export default function ResultadoDeBusqueda(datosCotizacion) {
                   <span className={styles.infoValue}>{flight.duracion}</span>
                 </div>
               </div>
-              <div className={styles.price}>💵 ${flight.price.toLocaleString('es-AR')}</div>
+              <div className={styles.price}>💵 {flight.moneda} ${flight.price.toLocaleString()}</div>
             </article>
           ))}
 
           {/* Vuelos con Escala */}
-          <h2 className={styles.columnTitle} data-aos="fade-up">✈️ Top 3 Vuelos con Escala</h2>
-          {stopFlights.map((flight) => (
+          <h2 className={styles.columnTitle} data-aos="fade-up">✈️ Vuelos con Escala</h2>
+          {stopFlights.map(flight => (
             <article
               key={flight.id}
               className={`${styles.card} ${selectedFlightId === flight.id ? styles.selected : ''}`}
@@ -114,7 +134,7 @@ export default function ResultadoDeBusqueda(datosCotizacion) {
                   <span className={styles.infoValue}>{flight.duracion}</span>
                 </div>
               </div>
-              <div className={styles.price}>💵 ${flight.price.toLocaleString('es-AR')}</div>
+              <div className={styles.price}>💵 {flight.moneda} ${flight.price.toLocaleString()}</div>
             </article>
           ))}
         </div>
@@ -122,7 +142,7 @@ export default function ResultadoDeBusqueda(datosCotizacion) {
         {/* Hoteles */}
         <div className={styles.hotelsColumn}>
           <h2 className={styles.columnTitle} data-aos="fade-up">🏨 Top Hoteles</h2>
-          {hotelOptions.map((hotel) => (
+          {hotelOptions.map(hotel => (
             <article
               key={hotel.id}
               className={`${styles.card} ${selectedHotelId === hotel.id ? styles.selected : ''}`}
